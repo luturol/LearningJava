@@ -7,9 +7,12 @@ import br.com.firstproject.forum.modelo.Topico;
 import br.com.firstproject.forum.repository.CursoRepository;
 import br.com.firstproject.forum.repository.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,7 +37,12 @@ public class TopicosController {
     }
 
     @PostMapping
-    public void cadastrar(@RequestBody TopicoForm topicoForm) {
-        topicoRepository.save(topicoForm.converter(cursoRepository));
+    public ResponseEntity<TopicoDTO> cadastrar(@RequestBody TopicoForm topicoForm, UriComponentsBuilder uriComponentsBuilder) {
+        Topico topico = topicoForm.converter(cursoRepository);
+        topicoRepository.save(topico);
+
+        URI uri = uriComponentsBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(new TopicoDTO(topico));
     }
 }
