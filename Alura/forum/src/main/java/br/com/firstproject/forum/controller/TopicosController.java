@@ -2,6 +2,7 @@ package br.com.firstproject.forum.controller;
 
 import br.com.firstproject.forum.controller.dto.DetalhesDoTopicoDTO;
 import br.com.firstproject.forum.controller.dto.TopicoDTO;
+import br.com.firstproject.forum.controller.form.AtualizacaoTopicoForm;
 import br.com.firstproject.forum.controller.form.TopicoForm;
 import br.com.firstproject.forum.modelo.Curso;
 import br.com.firstproject.forum.modelo.Topico;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Arrays;
@@ -53,5 +55,13 @@ public class TopicosController {
         Topico topico = topicoRepository.getById(id);
 
         return new DetalhesDoTopicoDTO(topico);
+    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<TopicoDTO> atualizar(@PathVariable Long id, @RequestBody @Valid AtualizacaoTopicoForm form){
+        Topico topico = form.atualizar(id, topicoRepository);
+
+        return ResponseEntity.ok(new TopicoDTO(topico));
     }
 }
