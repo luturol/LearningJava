@@ -1,5 +1,6 @@
 package br.com.firstproject.forum.controller;
 
+import br.com.firstproject.forum.controller.dto.DetalhesDoTopicoDTO;
 import br.com.firstproject.forum.controller.dto.TopicoDTO;
 import br.com.firstproject.forum.controller.form.TopicoForm;
 import br.com.firstproject.forum.modelo.Curso;
@@ -45,5 +46,12 @@ public class TopicosController {
         URI uri = uriComponentsBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
 
         return ResponseEntity.created(uri).body(new TopicoDTO(topico));
+    }
+
+    @GetMapping("/{id}")
+    public DetalhesDoTopicoDTO detalhar(@PathVariable Long id){
+        Topico topico = topicoRepository.getById(id);
+
+        return new DetalhesDoTopicoDTO(topico);
     }
 }
